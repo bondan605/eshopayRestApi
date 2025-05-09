@@ -24,7 +24,7 @@ public abstract class BaseCrudController<T, ID> {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<T> getById(@PathVariable ID id) {
+    public ResponseEntity<T> getById(@PathVariable("id") ID id) {
         return ResponseEntity.ok(getService().findById(id));
     }
 
@@ -34,12 +34,12 @@ public abstract class BaseCrudController<T, ID> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<T> update(@PathVariable ID id, @RequestBody @Valid T entity) {
+    public ResponseEntity<T> update(@PathVariable("id") ID id, @RequestBody @Valid T entity) {
         return ResponseEntity.ok(getService().update(id, entity));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable ID id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") ID id) {
         getService().delete(id);
         return ResponseEntity.noContent().build();
     }
