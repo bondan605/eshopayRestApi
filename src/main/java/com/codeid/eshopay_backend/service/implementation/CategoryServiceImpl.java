@@ -23,6 +23,13 @@ public class CategoryServiceImpl implements CategoryService {
         return new CategoryDto(category.getCategoryId(), category.getCategoryName(), category.getDescription());
     }
 
+    public static Category mapToEntity(CategoryDto categoryDto) {
+        return new Category(
+                categoryDto.getCategoryId(),
+                categoryDto.getCategoryName(),
+                categoryDto.getDescription());
+    }
+
     @Override
     public List<CategoryDto> findAll() {
         return this.categoryRepository.findAll()

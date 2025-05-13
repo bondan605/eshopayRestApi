@@ -18,5 +18,5 @@ public abstract class AbstractEntity {
 
     @Version
     @Column(name = "modified_date")
-    private Instant modifiedDate;
+    private Instant modifiedDate = Instant.now();
 }
