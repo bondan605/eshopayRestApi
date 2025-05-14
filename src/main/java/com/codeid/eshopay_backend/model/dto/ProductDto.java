@@ -1,11 +1,17 @@
 package com.codeid.eshopay_backend.model.dto;
 
+import java.util.List;
+
+import com.codeid.eshopay_backend.model.entity.ProductImage;
+
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProductDto {
     private Long productId;
 
@@ -30,5 +36,5 @@ public class ProductDto {
     private SuppliersDto supplier;
 
     private CategoryDto category;
-
+    private List<ProductImage> productImages;
 }
