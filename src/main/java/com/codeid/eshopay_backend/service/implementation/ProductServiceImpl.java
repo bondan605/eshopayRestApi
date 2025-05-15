@@ -130,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
         @Override
         public List<ProductImageDto> bulkFindAll(Long id) {
                 Product product = this.productRepository.findById(id)
-                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                                .orElseThrow(() -> new EntityNotFoundException("Product not found with id " + id));
 
                 List<ProductImage> productImages = this.productImageRepository.findAllByProduct(product);
 
@@ -144,8 +144,7 @@ public class ProductServiceImpl implements ProductService {
         public List<ProductImageDto> bulkCreate(Long id, MultipartFile[] files, List<String> filenames) {
                 Product product = this.productRepository.findById(id)
                                 .orElseThrow(
-                                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                                                "Product not found with id " + id));
+                                                () -> new EntityNotFoundException("Product not found with id " + id));
 
                 this.productImageRepository.deleteByProduct(product);
 
