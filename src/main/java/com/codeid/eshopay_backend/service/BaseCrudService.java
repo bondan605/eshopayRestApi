@@ -1,9 +1,12 @@
 package com.codeid.eshopay_backend.service;
 
-import java.util.List;
+import com.codeid.eshopay_backend.model.dto.ApiResponsePagination;
 
 public interface BaseCrudService<T, ID> {
-    List<T> findAll();
+    // List<T> findAll();
+
+    ApiResponsePagination<T> findAll(Integer size, Integer current, String keyword, String category,
+            String sortingDirection);
 
     T findById(ID id);
 

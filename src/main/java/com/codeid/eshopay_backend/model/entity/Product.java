@@ -1,8 +1,6 @@
 package com.codeid.eshopay_backend.model.entity;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,7 +30,7 @@ public class Product extends AbstractEntity {
     private String quantityPerUnit;
 
     @Column(name = "unit_price")
-    private double unitPrice;
+    private BigDecimal unitPrice;
 
     @Column(name = "units_in_stock")
     private Integer unitsInStock;
@@ -57,8 +55,4 @@ public class Product extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "product")
-    private List<ProductImage> productImages;
 }

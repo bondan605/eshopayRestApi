@@ -35,11 +35,6 @@ public class ShippersController extends BaseCrudController<ShippersDto, Long> {
     }
 
     @Override
-    public ResponseEntity<List<ShippersDto>> getAll() {
-        return super.getAll();
-    }
-
-    @Override
     public ResponseEntity<ShippersDto> getById(Long id) {
         return super.getById(id);
     }

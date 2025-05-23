@@ -1,10 +1,17 @@
 package com.codeid.eshopay_backend.service.implementation;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.codeid.eshopay_backend.model.dto.ApiResponsePagination;
+import com.codeid.eshopay_backend.model.dto.Pagination;
 import com.codeid.eshopay_backend.model.dto.SuppliersDto;
 import com.codeid.eshopay_backend.model.entity.Suppliers;
 import com.codeid.eshopay_backend.repository.SuppliersRepository;
@@ -33,12 +40,29 @@ public class SuppliersServiceImpl implements SuppliersService {
     }
 
     @Override
-    public List<SuppliersDto> findAll() {
-        log.debug("request fetching data categories");
-        return this.suppliersRepository.findAll()
-                .stream()
-                .map(SuppliersServiceImpl::mapToDto) // untuk ubah tipe data dari department ke departmentDto
+    public ApiResponsePagination<SuppliersDto> findAll(Integer size, Integer current, String keyword,
+            String categoryName, String sortingDirection) {
+
+        Pageable pageable = PageRequest.of(current - 1, size, Sort.by("supplierId").ascending());
+        Page<Suppliers> pageResult = suppliersRepository.findAll(pageable);
+        List<SuppliersDto> supplierDTOs = pageResult.getContent().stream().map(SuppliersServiceImpl::mapToDto)
                 .collect(Collectors.toList());
+
+        Pagination pagination = new Pagination();
+        pagination.setCurrent(current);
+        pagination.setSize(size);
+        pagination.setTotal(pageResult.getTotalElements());
+        pagination.setTotalPages(pageResult.getTotalPages());
+
+        ApiResponsePagination<SuppliersDto> response = new ApiResponsePagination<>();
+        response.setMessage("success get data");
+        response.setStatusCode(200);
+        response.setTimestamp(LocalDateTime.now());
+        response.setPage(pagination);
+        response.setData(supplierDTOs);
+
+        return response;
+
     }
 
     @Override

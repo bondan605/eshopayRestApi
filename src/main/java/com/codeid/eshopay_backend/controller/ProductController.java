@@ -1,5 +1,6 @@
 package com.codeid.eshopay_backend.controller;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +26,8 @@ import com.codeid.eshopay_backend.model.response.ApiResponse;
 import com.codeid.eshopay_backend.service.BaseCrudService;
 import com.codeid.eshopay_backend.service.FileStorageService;
 import com.codeid.eshopay_backend.service.ProductService;
+import com.codeid.eshopay_backend.util.SuccessMessage;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,31 +46,6 @@ public class ProductController extends BaseMultipartController<ProductDto, Long>
     }
 
     @Override
-    public ResponseEntity<ProductDto> create(@Valid ProductDto entity) {
-        return super.create(entity);
-    }
-
-    @Override
-    public ResponseEntity<Void> delete(Long id) {
-        return super.delete(id);
-    }
-
-    @Override
-    public ResponseEntity<List<ProductDto>> getAll() {
-        return super.getAll();
-    }
-
-    @Override
-    public ResponseEntity<ProductDto> getById(Long id) {
-        return super.getById(id);
-    }
-
-    @Override
-    public ResponseEntity<ProductDto> update(Long id, @Valid ProductDto entity) {
-        return super.update(id, entity);
-    }
-
-    @Override
     public ResponseEntity<?> createMultipart(ProductDto dto, MultipartFile file, String description) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("Please upload product photo");
@@ -79,9 +55,9 @@ public class ProductController extends BaseMultipartController<ProductDto, Long>
             dto.setPhoto(fileName);
             var productDto = productService.save(dto);
 
-            ApiResponse<ProductDto> response = new ApiResponse<ProductDto>(EnumStatus.Succeed.toString(),
-                    "Product created", productDto);
-            return ResponseEntity.ok(response);
+            ApiResponse<ProductDto> apiResponse = new ApiResponse<>(
+                    SuccessMessage.UploadImage.UPLOAD_IMAGE, productDto, LocalDateTime.now(), SuccessMessage.Http.OK);
+            return ResponseEntity.ok(apiResponse);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -134,10 +110,9 @@ public class ProductController extends BaseMultipartController<ProductDto, Long>
 
             ProductDto updated = productService.update(id, dto);
 
-            return ResponseEntity.ok(new ApiResponse<>(
-                    EnumStatus.Succeed.toString(),
-                    "Product updated",
-                    updated));
+            ApiResponse<ProductDto> apiResponse = new ApiResponse<>(
+                    SuccessMessage.Update.Update_Multipart, updated, LocalDateTime.now(), SuccessMessage.Http.OK);
+            return ResponseEntity.ok(apiResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", e.getMessage()));
@@ -145,12 +120,14 @@ public class ProductController extends BaseMultipartController<ProductDto, Long>
     }
 
     @GetMapping("/{id}/uploadMultipleImages")
-    public ResponseEntity<ApiResponse<List<ProductImageDto>>> getAllMultipartBulk(
+    public ResponseEntity<?> getAllMultipartBulk(
             @PathVariable("id") Long id) {
-        ApiResponse<List<ProductImageDto>> response = new ApiResponse<>(
-                EnumStatus.Succeed.toString(),
-                "Data retrieved successfully",
-                productService.bulkFindAll(id));
+        var response = ApiResponse.builder()
+                .message("success get photo")
+                .data(productService.bulkFindAll(id))
+                .statusCode(200)
+                .timestamp(LocalDateTime.now())
+                .build();
 
         return ResponseEntity.ok(response);
     }
@@ -177,10 +154,12 @@ public class ProductController extends BaseMultipartController<ProductDto, Long>
                     .toList();
             List<ProductImageDto> productImagesDto = productService.bulkCreate(id, files, filenames);
 
-            ApiResponse<List<ProductImageDto>> response = new ApiResponse<>(
-                    EnumStatus.Succeed.toString(),
-                    "Data created successfully",
-                    productImagesDto);
+            ApiResponse<Object> response = ApiResponse.builder()
+                    .message("product photos created")
+                    .statusCode(200)
+                    .data(productImagesDto)
+                    .timestamp(LocalDateTime.now())
+                    .build();
 
             return ResponseEntity.ok(response);
         } catch (Exception ex) {

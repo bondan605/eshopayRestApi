@@ -13,4 +13,5 @@ public interface ProductService extends BaseCrudService<ProductDto, Long> {
 
     List<ProductImageDto> bulkCreate(Long id, MultipartFile[] files, List<String> filenames);
 
+    void updateProductStock(Long productId, Integer quantity);
 }

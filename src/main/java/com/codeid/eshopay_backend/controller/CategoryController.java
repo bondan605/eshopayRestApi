@@ -35,11 +35,6 @@ public class CategoryController extends BaseCrudController<CategoryDto, Long> {
     }
 
     @Override
-    public ResponseEntity<List<CategoryDto>> getAll() {
-        return super.getAll();
-    }
-
-    @Override
     public ResponseEntity<CategoryDto> getById(Long id) {
         return super.getById(id);
     }

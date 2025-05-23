@@ -1,9 +1,6 @@
 package com.codeid.eshopay_backend.model.dto;
 
-import java.util.List;
-
-import com.codeid.eshopay_backend.model.entity.ProductImage;
-
+import java.math.BigDecimal;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +18,7 @@ public class ProductDto {
     @Size(max = 20, message = "quantity per unit max length is 20")
     private String quantityPerUnit;
 
-    private double unitPrice;
+    private BigDecimal unitPrice;
 
     private Integer unitsInStock;
 
@@ -33,8 +30,7 @@ public class ProductDto {
 
     private String photo;
 
-    private SuppliersDto supplier;
+    private SuppliersDto supplierDto;
 
-    private CategoryDto category;
-    private List<ProductImage> productImages;
+    private CategoryDto categoryDto;
 }

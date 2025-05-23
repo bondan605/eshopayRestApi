@@ -1,6 +1,7 @@
-package com.codeid.eshopay_backend.model.response;
+package com.codeid.eshopay_backend.model.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +14,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApiResponse<T> {
+public class ApiResponsePagination<T> {
 
     private String message;
-    private T data;
     private LocalDateTime timestamp;
     private int statusCode;
+    private List<T> data;
+    private Pagination page;
+
 }

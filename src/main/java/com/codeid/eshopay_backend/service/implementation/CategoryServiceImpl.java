@@ -1,11 +1,18 @@
 package com.codeid.eshopay_backend.service.implementation;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.codeid.eshopay_backend.model.dto.ApiResponsePagination;
 import com.codeid.eshopay_backend.model.dto.CategoryDto;
+import com.codeid.eshopay_backend.model.dto.Pagination;
 import com.codeid.eshopay_backend.model.entity.Category;
 import com.codeid.eshopay_backend.repository.CategoryRepository;
 import com.codeid.eshopay_backend.service.CategoryService;
@@ -31,11 +38,26 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> findAll() {
-        return this.categoryRepository.findAll()
-                .stream()
-                .map(CategoryServiceImpl::mapToDto)
+    public ApiResponsePagination<CategoryDto> findAll(Integer size, Integer current, String keyword,
+            String categoryName, String sortingDirection) {
+
+        Pageable pageable = PageRequest.of(current - 1, size, Sort.by("categoryId").ascending());
+        Page<Category> pageResult = categoryRepository.findAll(pageable);
+        List<CategoryDto> categoryDTOs = pageResult.getContent().stream().map(CategoryServiceImpl::mapToDto)
                 .collect(Collectors.toList());
+        Pagination pagination = new Pagination();
+        pagination.setSize(size);
+        pagination.setCurrent(current);
+        pagination.setTotal(pageResult.getTotalElements());
+        pagination.setTotalPages(pageResult.getTotalPages());
+
+        ApiResponsePagination<CategoryDto> response = new ApiResponsePagination<>();
+        response.setMessage("success get category");
+        response.setTimestamp(LocalDateTime.now());
+        response.setStatusCode(200);
+        response.setData(categoryDTOs);
+        response.setPage(pagination);
+        return response;
     }
 
     @Override

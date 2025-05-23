@@ -1,10 +1,17 @@
 package com.codeid.eshopay_backend.service.implementation;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.codeid.eshopay_backend.model.dto.ApiResponsePagination;
+import com.codeid.eshopay_backend.model.dto.Pagination;
 import com.codeid.eshopay_backend.model.dto.ShippersDto;
 import com.codeid.eshopay_backend.model.entity.Shippers;
 import com.codeid.eshopay_backend.repository.ShippersRepository;
@@ -28,12 +35,28 @@ public class ShippersServiceImpl implements ShippersService {
     }
 
     @Override
-    public List<ShippersDto> findAll() {
-        log.debug("request fetching data shipper");
-        return this.shippersRepository.findAll()
-                .stream()
-                .map(ShippersServiceImpl::mapToDto) // untuk ubah tipe data dari department ke departmentDto
+    public ApiResponsePagination<ShippersDto> findAll(Integer size, Integer current, String keyword,
+            String categoryName, String sortingDirection) {
+
+        Pageable pageable = PageRequest.of(current - 1, size, Sort.by("shipperId"));
+        Page<Shippers> pageResult = shippersRepository.findAll(pageable);
+        List<ShippersDto> shippersDTOs = pageResult.getContent().stream().map(ShippersServiceImpl::mapToDto)
                 .collect(Collectors.toList());
+
+        Pagination pagination = new Pagination();
+        pagination.setSize(size);
+        pagination.setCurrent(current);
+        pagination.setTotal(pageResult.getTotalElements());
+        pagination.setTotalPages(pageResult.getTotalPages());
+
+        ApiResponsePagination<ShippersDto> response = new ApiResponsePagination<>();
+        response.setMessage("success get data");
+        response.setPage(pagination);
+        response.setStatusCode(200);
+        response.setTimestamp(LocalDateTime.now());
+        response.setData(shippersDTOs);
+
+        return response;
     }
 
     @Override
