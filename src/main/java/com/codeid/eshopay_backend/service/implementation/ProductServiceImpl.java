@@ -29,6 +29,7 @@ import com.codeid.eshopay_backend.repository.ProductRepository;
 import com.codeid.eshopay_backend.repository.specs.ProductItemSpec;
 import com.codeid.eshopay_backend.service.ProductService;
 import com.codeid.eshopay_backend.util.ErrorMessage;
+import com.codeid.eshopay_backend.util.SuccessMessage;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -118,7 +119,7 @@ public class ProductServiceImpl implements ProductService {
                                                 .build());
 
                 ApiResponsePagination<ProductDto> response = new ApiResponsePagination<>();
-                response.setMessage("success get data");
+                response.setMessage(SuccessMessage.FindAll.FIND_DATA);
                 response.setStatusCode(200);
                 response.setData(productDTOs);
                 response.setTimestamp(LocalDateTime.now());

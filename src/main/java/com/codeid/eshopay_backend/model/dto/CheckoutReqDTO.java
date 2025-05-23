@@ -11,15 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CheckoutReqDTO {
 
-    // private Long userId;
-
     private Long shipperId;
-    // private String shipName;
-    // private String shipAddress;
-    // private String shipCity;
-    // private String shipRegion;
-    // private String shipPostalCode;
-    // private String shipCountry;
 
     private String paymentType;
 
